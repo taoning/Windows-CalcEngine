@@ -60,12 +60,17 @@ namespace FenestrationCommon
         //! range, then interpolation function should be called.
         CSeries operator*(const CSeries & other);
 
+        CSeries operator*(const double val);
+
+        CSeries operator/(const CSeries & other);
+
         //! \brief Subtraction of values in spectral properties that have same wavelength.
         //!
         //! Function will work only if two spectral properties have identical wavelengths. Otherwise
         //! runtime error will be thrown. If two spectral properites do not have same wavelength
         //! range, then interpolation function should be called.
         CSeries operator-(const CSeries & other) const;
+        CSeries operator-(const double val) const;
 
         //! \brief Addition of values in spectral properties that have same wavelength.
         //!
@@ -73,6 +78,7 @@ namespace FenestrationCommon
         //! runtime error will be thrown. If two spectral properties do not have same wavelength
         //! range, then interpolation function should be called.
         CSeries operator+(const CSeries & other) const;
+        CSeries operator+(const double val) const;
 
         // Return wavelength values for spectral properties.
         [[nodiscard]] std::vector<double> getXArray() const;
@@ -106,6 +112,7 @@ namespace FenestrationCommon
     };
 
     CSeries operator-(const double val, const CSeries & other);
+    CSeries sqrt(const CSeries & other);
 
 }   // namespace FenestrationCommon
 
