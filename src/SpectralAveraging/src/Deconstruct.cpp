@@ -31,10 +31,10 @@ namespace SpectralAveraging
         auto taus = (Rs - rs) / rs / Ts;
 
         // check if taus has nagative value
-        return {ts, rs, taus};
+        return {{ts, rs,rs}, taus};
     }
 
-    CoatingInternalOpticalProperty CoatedDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
+    SurfaceOpticalProperty CoatedDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
                                                     const std::shared_ptr<CSpectralSampleData> & subdat)
     {
         MonolithicInternalOpticalProperty sprop = MonolithicDeconstruct(subdat);
@@ -47,12 +47,12 @@ namespace SpectralAveraging
 
         FenestrationCommon::CSeries tau2 = sprop.taus * sprop.taus;
 
-        FenestrationCommon::CSeries rfc = (Rfc - sprop.rs) / tau2 / (sprop.rs * (Rfc - 2.) + 1.);
+        FenestrationCommon::CSeries rfc = (Rfc - sprop.surface.rfs) / tau2 / (sprop.surface.rfs * (Rfc - 2.) + 1.);
 
-        FenestrationCommon::CSeries tc = Tc / (1 - sprop.rs * rfc * tau2) / sprop.ts / sprop.taus;
+        FenestrationCommon::CSeries tc = Tc / (1 - sprop.surface.rfs * rfc * tau2) / sprop.surface.ts / sprop.taus;
 
         FenestrationCommon::CSeries rbc =
-          Rbc - tc * tc * sprop.rs * tau2 / (1 - sprop.rs * rfc * tau2);
+          Rbc - tc * tc * sprop.surface.rfs * tau2 / (1 - sprop.surface.rfs * rfc * tau2);
 
         // check if taus has nagative value
         return {tc, rfc, rbc};
@@ -68,11 +68,11 @@ namespace SpectralAveraging
           FenestrationCommon::Property::T, FenestrationCommon::Side::Front);
 
         FenestrationCommon::CSeries denoms =
-          Tl * sprop1.rs * sprop2.rs * sprop1.taus * sprop2.taus * 2;
+          Tl * sprop1.surface.rfs * sprop2.surface.rfs * sprop1.taus * sprop2.taus * 2;
 
-        FenestrationCommon::CSeries noms = sprop1.ts * sprop2.ts * -1.
-                                           + sqrt(sprop1.ts * sprop1.ts * sprop2.ts * sprop2.ts
-                                                  + Tl * Tl * sprop1.rs * sprop2.rs * 4);
+        FenestrationCommon::CSeries noms = sprop1.surface.ts * sprop2.surface.ts * -1.
+                                           + sqrt(sprop1.surface.ts * sprop1.surface.ts * sprop2.surface.ts * sprop2.surface.ts
+                                                  + Tl * Tl * sprop1.surface.rfs * sprop2.surface.rfs * 4);
 
         return noms / denoms;
     }
@@ -85,7 +85,7 @@ namespace SpectralAveraging
     }
 
 
-    CoatingInternalOpticalProperty
+    SurfaceOpticalProperty
       EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
                                  const std::shared_ptr<CSpectralSampleData> & subdat1,
                                  const std::shared_ptr<CSpectralSampleData> & subdat2,
@@ -103,35 +103,35 @@ namespace SpectralAveraging
           FenestrationCommon::Property::R, FenestrationCommon::Side::Back);
 
         FenestrationCommon::CSeries Rfprim =
-          (Rfl - sprop1.rs) / (sprop1.taus * sprop1.taus)
-          / (sprop1.ts * sprop1.ts + sprop1.rs * (Rfl - sprop1.rs));
+          (Rfl - sprop1.surface.rfs) / (sprop1.taus * sprop1.taus)
+          / (sprop1.surface.ts * sprop1.surface.ts + sprop1.surface.rfs * (Rfl - sprop1.surface.rfs));
         FenestrationCommon::CSeries Tprim =
-          Tl * (1 - sprop1.taus * sprop1.taus * Rfprim * sprop1.rs) / sprop1.ts / sprop1.taus;
+          Tl * (1 - sprop1.taus * sprop1.taus * Rfprim * sprop1.surface.rfs) / sprop1.surface.ts / sprop1.taus;
         FenestrationCommon::CSeries Rbprim =
-          (Rbl - Tprim * Tprim * sprop1.rs * sprop1.taus * sprop1.taus)
-          / (1 - sprop1.taus * sprop1.taus * Rfprim * sprop1.rs);
+          (Rbl - Tprim * Tprim * sprop1.surface.rfs * sprop1.taus * sprop1.taus)
+          / (1 - sprop1.taus * sprop1.taus * Rfprim * sprop1.surface.rfs);
 
         FenestrationCommon::CSeries rgcdenom =
           (taupvb * taupvb * sprop2.taus * sprop2.taus)
-          * ((Rbprim - sprop2.rs) * sprop2.rs + sprop2.ts * sprop2.ts);
-        FenestrationCommon::CSeries rbc = (Rbprim - sprop2.rs) / rgcdenom;
+          * ((Rbprim - sprop2.surface.rfs) * sprop2.surface.rfs + sprop2.surface.ts * sprop2.surface.ts);
+        FenestrationCommon::CSeries rbc = (Rbprim - sprop2.surface.rfs) / rgcdenom;
 
-        FenestrationCommon::CSeries tcdenom = sprop2.ts * taupvb * sprop2.taus;
+        FenestrationCommon::CSeries tcdenom = sprop2.surface.ts * taupvb * sprop2.taus;
         FenestrationCommon::CSeries tcnom =
-          Tprim * (1 - rbc * sprop2.rs * taupvb * taupvb * sprop2.taus * sprop2.taus);
+          Tprim * (1 - rbc * sprop2.surface.rfs * taupvb * taupvb * sprop2.taus * sprop2.taus);
         FenestrationCommon::CSeries tc = tcnom / tcdenom;
 
         FenestrationCommon::CSeries rfcdenom =
-          1 - sprop2.rs * rbc * taupvb * taupvb * sprop2.taus * sprop2.taus;
+          1 - sprop2.surface.rfs * rbc * taupvb * taupvb * sprop2.taus * sprop2.taus;
         FenestrationCommon::CSeries rfcnom =
-          Rfprim - (tc * tc * sprop2.rs * taupvb * taupvb * sprop2.taus * sprop2.taus);
+          Rfprim - (tc * tc * sprop2.surface.rfs * taupvb * taupvb * sprop2.taus * sprop2.taus);
         FenestrationCommon::CSeries rfc = rfcnom / rfcdenom;
 
         return {tc, rfc, rbc};
     }
 
     // Symmetrical laminates
-    CoatingInternalOpticalProperty
+    SurfaceOpticalProperty
       EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
                                  const std::shared_ptr<CSpectralSampleData> & subdat,
                                  const std::shared_ptr<CSpectralSampleData> lamdat)

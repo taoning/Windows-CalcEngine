@@ -8,24 +8,24 @@
 
 namespace SpectralAveraging
 {
-    struct MonolithicInternalOpticalProperty
+
+    struct SurfaceOpticalProperty
     {
         FenestrationCommon::CSeries ts;
-        FenestrationCommon::CSeries rs;
-        FenestrationCommon::CSeries taus;
+        FenestrationCommon::CSeries rfs;
+        FenestrationCommon::CSeries rbs;
     };
 
-    struct CoatingInternalOpticalProperty
+    struct MonolithicInternalOpticalProperty
     {
-        FenestrationCommon::CSeries tc;
-        FenestrationCommon::CSeries rfc;
-        FenestrationCommon::CSeries rbc;
+        SurfaceOpticalProperty surface;
+        FenestrationCommon::CSeries taus;
     };
 
     MonolithicInternalOpticalProperty
       MonolithicDeconstruct(const std::shared_ptr<CSpectralSampleData> & t_SampleData);
 
-    CoatingInternalOpticalProperty
+    SurfaceOpticalProperty
       CoatedDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
                         const std::shared_ptr<CSpectralSample> & subdat);
 
@@ -38,13 +38,13 @@ namespace SpectralAveraging
       LaminatedDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
                            const std::shared_ptr<CSpectralSample> & subdat2);
 
-    CoatingInternalOpticalProperty
+    SurfaceOpticalProperty
       EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
                                  const std::shared_ptr<CSpectralSample> & subdat1,
                                  const std::shared_ptr<CSpectralSample> & subdat2,
                                  const std::shared_ptr<CSpectralSample> lamdat);
 
-    CoatingInternalOpticalProperty
+    SurfaceOpticalProperty
       EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
                                  const std::shared_ptr<CSpectralSample> & subdat,
                                  const std::shared_ptr<CSpectralSample> lamdat);
