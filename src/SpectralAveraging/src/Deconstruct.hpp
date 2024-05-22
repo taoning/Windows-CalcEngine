@@ -26,28 +26,28 @@ namespace SpectralAveraging
       MonolithicDeconstruct(const std::shared_ptr<CSpectralSampleData> & t_SampleData);
 
     SurfaceOpticalProperty
-      CoatedDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
-                        const std::shared_ptr<CSpectralSample> & subdat);
+      CoatedDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
+                        const std::shared_ptr<CSpectralSampleData> & subdat);
 
     FenestrationCommon::CSeries
-      LaminatedDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
-                           const std::shared_ptr<CSpectralSample> & subdat1,
-                           const std::shared_ptr<CSpectralSample> & subdat2);
+      LaminateDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
+                           const std::shared_ptr<CSpectralSampleData> & subdat1,
+                           const std::shared_ptr<CSpectralSampleData> & subdat2);
 
     FenestrationCommon::CSeries
-      LaminatedDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
-                           const std::shared_ptr<CSpectralSample> & subdat2);
+      LaminateDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
+                           const std::shared_ptr<CSpectralSampleData> & subdat);
 
     SurfaceOpticalProperty
-      EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
-                                 const std::shared_ptr<CSpectralSample> & subdat1,
-                                 const std::shared_ptr<CSpectralSample> & subdat2,
-                                 const std::shared_ptr<CSpectralSample> lamdat);
+      EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
+                                 const std::shared_ptr<CSpectralSampleData> & subdat1,
+                                 const std::shared_ptr<CSpectralSampleData> & subdat2,
+                                 const std::shared_ptr<CSpectralSampleData> lamdat);
 
     SurfaceOpticalProperty
-      EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSample> & sampdat,
-                                 const std::shared_ptr<CSpectralSample> & subdat,
-                                 const std::shared_ptr<CSpectralSample> lamdat);
+      EmbeddedCoatingDeconstruct(const std::shared_ptr<CSpectralSampleData> & sampdat,
+                                 const std::shared_ptr<CSpectralSampleData> & subdat,
+                                 const std::shared_ptr<CSpectralSampleData> lamdat);
 
 }   // namespace SpectralAveraging
 
